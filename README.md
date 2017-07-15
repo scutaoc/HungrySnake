@@ -1,7 +1,7 @@
 # Hungry-Snake
 hungry-snake game in python. 仿制《贪吃蛇大作战》 
 
-具体游戏部分参考使用了 ![crossin/gluttonous](https://github.com/crossin/gluttonous)
+具体游戏部分参考使用了 [crossin/gluttonous](https://github.com/crossin/gluttonous)
 @crossin
 
 主要给crossin的版本添加了开始和结束UI，添加了Audio音效，增加了空格键加速的功能，并对游戏做了一部分的微调。
