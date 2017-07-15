@@ -288,12 +288,12 @@ class Game(cocos.layer.Layer):
         self.add(game,0,'game')
     #游戏结束
     def gameEnd(self,score):
-        #游戏结束动画
-        dead = Sprite('assets/img/dead.png')
-        dead.position = director.get_window_size()[0] / 2 , director.get_window_size()[1] / 2
-        self.sprite = dead
-        #淡出效果1s
-        self.fade_out()
+        # 游戏结束动画
+        # dead = Sprite('assets/img/dead.png')
+        # dead.position = director.get_window_size()[0] / 2 , director.get_window_size()[1] / 2
+        # self.sprite = dead
+        # 淡出效果1s
+        # self.fade_out()
         #删除游戏图层
         self.remove('game')
         #创建结束图层
