@@ -23,6 +23,7 @@ class GameOver(cocos.layer.Layer):
         #导入背景图片
         bkg = Sprite("assets/img/bkg.png",position=(director.get_window_size()[0] / 2, director.get_window_size()[1] / 2))
         self.add(bkg, 0, name='bkg')
+        print(dir(self))
 
         #导入menu图层
         menu = GameEndMenu()
@@ -75,7 +76,7 @@ class GameOver(cocos.layer.Layer):
     #更新数据库
     def rank(self, name='Nobody'):
         name = name.strip()
-        f = open('data.txt','r+a')
+        f = open('data.txt','a+')
         num = '0'
         #如果是匿名，则递增编号
         if name == 'Nobody':
@@ -104,7 +105,7 @@ class GameOver(cocos.layer.Layer):
         self.parent.back()
 
     def getBestScore(self): #获取数据库最高分
-        f = open('data.txt', 'r')
+        f = open('data.txt', 'a+')
         max = 0
         for i in f.readlines(1000):
             mat = re.search('([0-9]+)$', i) #正则寻找最高分
@@ -203,7 +204,7 @@ class GameStartMenu(Menu):
         self.buttonAu.play(loops=0)
         exit()
     def handleInput(self,value):
-        print value
+        print(value)
 #帮助界面
 class HelpLayer(cocos.layer.Layer):
     is_event_handler = True

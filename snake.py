@@ -61,7 +61,7 @@ class Snake(cocos.cocosnode.CocosNode):
         b.scale = 1.5
         self.body.append(b)
         if self.x == 0:
-            print self.position
+            print(self.position)
         b.position = self.position
         self.parent.batch.add(b, 9999 - len(self.body))
     #初始化分数和蛇身长度
@@ -113,22 +113,37 @@ class Snake(cocos.cocosnode.CocosNode):
             self.path = self.path[int(-m_l * 2):]
     #角度更新
     def update_angle(self, keys):
-        x, y = 0, 0
-        if 65361 in keys:  # 左
-            x -= 1
-        if 65362 in keys:  # 上
-            y += 1
-        if 65363 in keys:  # 右
-            x += 1
-        if 65364 in keys:  # 下
-            y -= 1
-        #转向
-        directs = ((225, 180, 135), (270, None, 90), (315, 0, 45))
-        direct = directs[x + 1][y + 1]
-        if direct is None:
-            self.angle_dest = self.angle
+        # 原版本为四个方向键控制，现改为左右方向键控制
+        # x, y = 0, 0
+        # if 65361 in keys:  # 左
+        #     x -= 1
+        # if 65362 in keys:  # 上
+        #     y += 1
+        # if 65363 in keys:  # 右
+        #     x += 1
+        # if 65364 in keys:  # 下
+        #     y -= 1
+        # #转向
+        # directs = ((225, 180, 135), (270, None, 90), (315, 0, 45))
+        # direct = directs[x + 1][y + 1]
+        # if direct is None:
+        #     self.angle_dest = self.angle
+        # else:
+        #     self.angle_dest = direct
+
+        directs = [0, 45, 90, 135, 180, 225, 270, 315]
+        if 65361 in keys or 97 in keys:  # 左
+            # self.index = (self.index - 1) % 8
+            # self.angle_dest = int(directs[self.index])
+            self.angle_dest = int((self.angle_dest + 45) % 360 // 45 * 45)
+        elif 65363 in keys or 100 in keys:  # 右
+            # self.index = (self.index + 1) % 8
+            # self.angle_dest = int(directs[self.index])
+            self.angle_dest = int((self.angle_dest - 45) % 360 // 45 * 45)
         else:
-            self.angle_dest = direct
+            pass
+        print(self.angle_dest)
+
     #添加分数
     def add_score(self, s=1):
         if self.is_dead:
@@ -143,24 +158,26 @@ class Snake(cocos.cocosnode.CocosNode):
             self.add_body()
     #bot ai
     def ai(self, dt):
+        # 弱鸡版ai，只有两种行动策略，有兴趣的同学可以自行增强
         self.angle_dest = (self.angle_dest + 360) % 360
 
         if (self.x < 100 and 90 < self.angle_dest < 270) or (
             self.x > definition.WIDTH - 100 and (
                 self.angle_dest < 90 or self.angle_dest > 270)
-        ):
+        ): # 即将触碰到左墙壁或右墙壁时，掉头就跑
             self.angle_dest = 180 - self.angle_dest
         elif (self.y < 100 and self.angle_dest > 180) or (
             self.y > definition.HEIGHT - 100 and self.angle_dest < 180
-        ):
+        ): # 即将触碰到上墙壁或下墙壁时，掉头就跑
             self.angle_dest = -self.angle_dest
-        else:
+        else: # 不然就按着原来的方向前进
             arena = self.parent
             self.collision_detect(arena.snake)
             for s in arena.enemies:
                 if s != self:
                     self.collision_detect(s)
-
+    
+    # 碰撞检测
     def collision_detect(self, other):
         if self.is_dead or other.is_dead:
             return

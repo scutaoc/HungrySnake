@@ -62,11 +62,12 @@ class Arena(cocos.layer.ColorLayer):
             self.accel.play(-1)
             self.accel.isPlaying = True
             self.snake.speed = 300
+        print('aaa')
+
     # 键盘释放
-    def on_key_release (self, key, modifiers):
+    def on_key_release(self, key, modifiers):
         if symbol_string(key) != "RETURN":
             self.keys_pressed.remove(key)
-        self.snake.update_angle(self.keys_pressed)
         if symbol_string(key) == "SPACE":
             if self.accel.isPlaying:
                 self.accel.stop()
