@@ -20,7 +20,7 @@ class HungrySnake(cocos.layer.Layer):
         self.arena = Arena()
         self.add(self.arena)
         #分数列表
-        self.score = cocos.text.Label('30',font_name='Times New Roman',font_size=24,color=definition.GOLD)
+        self.score = cocos.text.Label('0',font_name='Times New Roman',font_size=24,color=definition.GOLD)
         self.score.position = 20, 440
         self.add(self.score, 99999)
         #播放BGM

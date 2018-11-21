@@ -62,7 +62,6 @@ class Arena(cocos.layer.ColorLayer):
             self.accel.play(-1)
             self.accel.isPlaying = True
             self.snake.speed = 300
-        print('aaa')
 
     # 键盘释放
     def on_key_release(self, key, modifiers):

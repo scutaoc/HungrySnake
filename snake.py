@@ -142,7 +142,6 @@ class Snake(cocos.cocosnode.CocosNode):
             self.angle_dest = int((self.angle_dest - 45) % 360 // 45 * 45)
         else:
             pass
-        print(self.angle_dest)
 
     #添加分数
     def add_score(self, s=1):
