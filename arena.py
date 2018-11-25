@@ -24,6 +24,7 @@ class Arena(cocos.layer.ColorLayer):
         self.add(self.batch)
         #加入用户蛇身
         self.snake = Snake()
+        self.snake.life = 3 # 因为技术太烂，所以做了个修改版，多加了几条命
         self.add(self.snake, 10000)
         self.snake.init_body()
         self.accel = Audio('assets/audio/accel.wav')
@@ -35,17 +36,18 @@ class Arena(cocos.layer.ColorLayer):
         #按下键集合
         self.keys_pressed = set()
 
-        for i in range(50):
+        for i in range(50): # 布置食物
             self.batch.add(Dot())
-        #注册事件
+        #注册事件(每帧调用一次update函数)
         self.schedule(self.update)
-    # 添加Snake
+    
     def add_enemy(self):
+        # 添加Snake
         enemy = Snake(True)
         self.add(enemy, 10000)
         enemy.init_body()
         self.enemies.append(enemy)
-    # 地图更新事件
+    # 地图更新事件，保持玩家的蛇位于视野中心
     def update(self, dt):
         if(self.snake):
             self.x = self.center[0] - self.snake.x

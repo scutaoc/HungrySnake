@@ -27,7 +27,7 @@ class GameOver(cocos.layer.Layer):
         self.add(bkg, 0, name='bkg')
 
         #导入menu图层
-        menu = GameEndMenu() # "再来一次"、"返回"、输入排行榜名字
+        menu = GameEndMenu() # "再来一次"、"返回"、输入玩家昵称
         self.add(menu,0, name='menu')
 
         #获取中间位置
@@ -83,10 +83,8 @@ class GameOver(cocos.layer.Layer):
             f.seek(0, os.SEEK_SET)
             lines = f.readlines()
             num = 0
-            print(lines)
             #如果是匿名，则递增编号
             if name == 'Guest':
-                print('Guest:', name)
                 for i in range(len(lines)):
                 # for line in lines:
                 # for line in f.readlines():
@@ -99,7 +97,6 @@ class GameOver(cocos.layer.Layer):
                 # lines.append(str(name) + ':' + str(self.score)+'\n') # 添加一行准备写入的内容
                 f.write(str(name) + ':' + str(self.score)+'\n')
             else:
-                # print('Others:', name)
                 # for i in range(len(lines)):
                 #     line = lines[i]
                 #     # mat = re.match('([0-9A-Za-z]*):([0-9]+)',line) #正则表达式提取分数
@@ -115,9 +112,6 @@ class GameOver(cocos.layer.Layer):
                 #     # lines.append(str(name) + ':' + str(self.score) + '\n')
                 f.write(str(name) + ':' + str(self.score) + '\n')
             
-            print(lines)                    
-            # f.writelines(lines) # 写入文件
-
     def startAgain(self): #重新开始
         self.parent.startGame() #调用父类函数
     def back(self): #返回主菜单
@@ -223,15 +217,17 @@ class GameStartMenu(Menu):
     def onQuit(self):
         self.buttonAu.play(loops=0)
         exit()
-    def handleInput(self,value):
-        print(value)
+
 #帮助界面
 class HelpLayer(cocos.layer.Layer):
     is_event_handler = True
     def __init__(self):
         #背景
         super(HelpLayer, self).__init__()
-        bkg = Sprite("assets/img/bkg.png",position = (director.get_window_size()[0] / 2, director.get_window_size()[1] / 2))
+        # bkg = Sprite("assets/img/bkg.png",position = (director.get_window_size()[0] / 2, director.get_window_size()[1] / 2))
+        bkg = Sprite("assets/img/bkg.png",position = (0, 0))
+
+        print(director.get_window_size()[0] / 2, director.get_window_size()[1] / 2)
         self.add(bkg, 0)
         #帮助
         help = Sprite("assets/img/help.png", position = (director.get_window_size()[0] / 2 + 15,
@@ -294,6 +290,7 @@ class Game(cocos.layer.Layer):
         #开始菜单
         menu = GameStartMenu()
         self.add(menu,0, name='menu')
+
     #开始游戏
     def startGame(self):
         #创建游戏竞技场实例
@@ -307,6 +304,7 @@ class Game(cocos.layer.Layer):
             self.remove('bkg')
         #加入游戏界面
         self.add(game,0,'game')
+
     #游戏结束
     def gameEnd(self,score):
         # 游戏结束动画
@@ -379,7 +377,7 @@ class Game(cocos.layer.Layer):
             data = []
             for line in lines: # line为一行数据，形如"Nobody0:8"
                 name, score = line.split(':')[0], line.split(':')[1]
-                data.append((name, score))
+                data.append((name, int(score)))
             # data的内容形如：[('Guest1', 49), ('Guest2', 3)]
             dicts = sorted(data, key=lambda d: d[1], reverse=True) # 按照分数值降序排序字典，返回一个元素为tuple的列表
 
