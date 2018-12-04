@@ -66,10 +66,6 @@ class Snake(cocos.cocosnode.CocosNode):
         self.parent.batch.add(b, 9999 - len(self.body)) #这一句没看懂
     #初始化分数和蛇身长度
     def init_body(self):
-        # if self.is_enemy:
-        #     self.score = 30
-        # else:
-        #     self.score = 0
         self.score = 0
         self.length = 4
         self.body = []
@@ -137,14 +133,10 @@ class Snake(cocos.cocosnode.CocosNode):
         # else:
         #     self.angle_dest = direct
 
-        directs = [0, 45, 90, 135, 180, 225, 270, 315]
+        # directs = [0, 45, 90, 135, 180, 225, 270, 315]
         if 65361 in keys or 97 in keys:  # 左
-            # self.index = (self.index - 1) % 8
-            # self.angle_dest = int(directs[self.index])
             self.angle_dest = int((self.angle_dest + 45) % 360 // 45 * 45)
         elif 65363 in keys or 100 in keys:  # 右
-            # self.index = (self.index + 1) % 8
-            # self.angle_dest = int(directs[self.index])
             self.angle_dest = int((self.angle_dest - 45) % 360 // 45 * 45)
         else:
             pass
@@ -164,8 +156,7 @@ class Snake(cocos.cocosnode.CocosNode):
 
     #bot ai
     def ai(self, dt):
-        # 弱鸡版ai，只有两种行动策略，有兴趣的同学可以自行增强（但又好像不止如此）
-        self.angle_dest = (self.angle_dest + 360) % 360
+        self.angle_dest = (self.angle_dest + 360) % 360 # 调整角度到[0, 360)之内，方便后面进行判断
 
         if (self.x < 100 and 90 < self.angle_dest < 270) or (
             self.x > definition.WIDTH - 100 and (
@@ -188,22 +179,22 @@ class Snake(cocos.cocosnode.CocosNode):
         if self.is_dead or other.is_dead:
             return
         for b in other.body:
+            # 敌人判断与自己的蛇头与其他蛇头的距离
             d_y = b.y - self.y
             d_x = b.x - self.x
             if abs(d_x) > 200 or abs(d_y) > 200:
-                return
+                return # 离得挺远，没事
+            # 如果离得比较近
             if d_x == 0:
-                if d_y > 0:
+                if d_y > 0: # 自己在上对方在下，掉头往上跑
                     angle = 90
-                else:
+                else: # 自己在下对方在上，掉头往上跑
                     angle = -90
             else:
                 angle = math.atan(d_y / d_x) * 180 / math.pi
-                if d_x < 0:
-                    angle += 180
-            angle = (angle + 360) % 360
-            if abs(angle - self.angle_dest) < 5:
-                self.angle_dest += random.randrange(90, 270) #逃逸
+                angle = (angle + 180) % 360 # 直接掉头
+            if abs(angle - self.angle_dest) < 5: # 如果调整后的方向还是跟原方向相差无几
+                self.angle_dest += random.randrange(90, 270) # 随便找个方向逃逸
     # 检查是否损坏
     def check_crash(self, other):
         if self.is_dead or other.is_dead:

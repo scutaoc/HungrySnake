@@ -83,33 +83,13 @@ class GameOver(cocos.layer.Layer):
             f.seek(0, os.SEEK_SET)
             lines = f.readlines()
             num = 0
-            #如果是匿名，则递增编号
-            if name == 'Guest':
-                for i in range(len(lines)):
-                # for line in lines:
-                # for line in f.readlines():
-                    line = lines[i] # 之所以不使用for是为了修改lines的值，以便更新文件中局部的内容
-                    # mat = re.match('Guest([0-9A-Za-z]+):',line) #正则表达式提取编号
-                    name_l = line.split(':')[0]
-                    if name_l:
+            if name == 'Guest': # 如果是匿名，则递增编号
+                for line in lines:
+                    if line[:5] == 'Guest':
                         num += 1 # 编号递增
-                name += str(num) # 拼接成一个完整的用户昵称
-                # lines.append(str(name) + ':' + str(self.score)+'\n') # 添加一行准备写入的内容
+                name = 'Guest' + str(num) # 拼接成一个完整的用户昵称
                 f.write(str(name) + ':' + str(self.score)+'\n')
-            else:
-                # for i in range(len(lines)):
-                #     line = lines[i]
-                #     # mat = re.match('([0-9A-Za-z]*):([0-9]+)',line) #正则表达式提取分数
-                #     name_l = line.split(':')[0]
-                #     # print(mat.group(1), mat.group(2))
-                #     if name_l:
-                #         old_score = line.split(':')[1]
-                #         # old_score = int(mat.group(1)) #当目前分数大于数据库时，更新
-                #         if old_score < int(self.score):
-                #             lines[i] = str(name) + ':' + str(self.score)+'\n'
-                #             break
-                # else: #新名字 直接插入
-                #     # lines.append(str(name) + ':' + str(self.score) + '\n')
+            else: # 否则直接写入
                 f.write(str(name) + ':' + str(self.score) + '\n')
             
     def startAgain(self): #重新开始
@@ -224,14 +204,12 @@ class HelpLayer(cocos.layer.Layer):
     def __init__(self):
         #背景
         super(HelpLayer, self).__init__()
-        # bkg = Sprite("assets/img/bkg.png",position = (director.get_window_size()[0] / 2, director.get_window_size()[1] / 2))
-        bkg = Sprite("assets/img/bkg.png",position = (0, 0))
-
-        print(director.get_window_size()[0] / 2, director.get_window_size()[1] / 2)
+        # 获取窗口的中心位置
+        positionW, positionH = director.get_window_size()[0] / 2, director.get_window_size()[1] / 2
+        bkg = Sprite("assets/img/bkg.png",position = (positionW, positionH))
         self.add(bkg, 0)
         #帮助
-        help = Sprite("assets/img/help.png", position = (director.get_window_size()[0] / 2 + 15,
-                                                     director.get_window_size()[1] / 2 - 80))
+        help = Sprite("assets/img/help.png", position = (positionW + 15, positionH - 80))
         self.add(help,1)
     #返回事件handler+音效
     def on_key_press(self, key, modifiers):
